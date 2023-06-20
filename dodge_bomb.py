@@ -44,7 +44,7 @@ def main():
         (-5,0):pg.transform.rotozoom(kk_img, 0, 2.0),
         (-5,-5):pg.transform.rotozoom(kk_img, -45, 2.0),
         (0,0):pg.transform.rotozoom(kk_img, 0, 2.0)
-    }
+    }  #こうかとんの身体の向きの回転
 
     kk_rct = kk_img.get_rect()
     kk_rct.center = WIDTH/2,HEIGHT/2
@@ -84,9 +84,9 @@ def main():
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
 
-        #if tmr <= 10:
-        #    vx += (accs[tmr]*1.01) - 1
-        #    vy += (accs[tmr]*1.01) - 1
+        #if tmr <= 9:
+        #    vx += ((accs[tmr]*1.01) - 1)
+        #    vy += ((accs[tmr]*1.01) - 1)
         bd_rct.move_ip(vx, vy)
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, kk_rct)
@@ -99,7 +99,7 @@ def main():
         screen.blit(bd_img, bd_rct)
         pg.display.update()
         tmr += 1
-        clock.tick(50)
+        clock.tick(20)
 
 
 
