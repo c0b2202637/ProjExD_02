@@ -11,6 +11,9 @@ delta = {
     pg.K_RIGHT:(+5, 0)
 }
 
+accs = [a for a in range(1, 11)]
+
+
 def check_bound(rect: pg.Rect) -> tuple[bool, bool]:
     """
     こうかとんRect，爆弾Rectが画面外 or 画面内かを判定する関数
@@ -29,7 +32,19 @@ def main():
     screen = pg.display.set_mode((WIDTH, HEIGHT))
     bg_img = pg.image.load("ex02/fig/pg_bg.jpg")
     kk_img = pg.image.load("ex02/fig/3.png")
-    kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
+    kk_img_r = pg.transform.flip(kk_img, True, False)
+
+    senkai = {
+        (0,-5):pg.transform.rotozoom(kk_img_r, 90, 2.0),
+        (+5,-5):pg.transform.rotozoom(kk_img_r, -45, 2.0),
+        (+5,0):pg.transform.rotozoom(kk_img_r, 0, 2.0),
+        (+5,+5):pg.transform.rotozoom(kk_img_r, -45, 2.0),
+        (0,+5):pg.transform.rotozoom(kk_img_r, -90, 2.0),
+        (-5,+5):pg.transform.rotozoom(kk_img, 45, 2.0),
+        (-5,0):pg.transform.rotozoom(kk_img, 0, 2.0),
+        (-5,-5):pg.transform.rotozoom(kk_img, -45, 2.0),
+        (0,0):pg.transform.rotozoom(kk_img, 0, 2.0)
+    }
 
     kk_rct = kk_img.get_rect()
     kk_rct.center = WIDTH/2,HEIGHT/2
@@ -62,7 +77,10 @@ def main():
             if key_lst[k]:
                 sum_mv[0] += mv[0]
                 sum_mv[1] += mv[1]
+        
+        kk_img = senkai[tuple(sum_mv)]
         kk_rct.move_ip(sum_mv)
+
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
 
