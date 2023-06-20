@@ -3,7 +3,7 @@ import sys
 import pygame as pg
 
 
-WIDTH, HEIGHT = 1600, 900
+WIDTH, HEIGHT = 1200, 700
 delta = {
     pg.K_UP:(0, -5),
     pg.K_DOWN:(0, +5),
@@ -11,6 +11,18 @@ delta = {
     pg.K_RIGHT:(+5, 0)
 }
 
+def check_bound(rect: pg.Rect) -> tuple[bool, bool]:
+    """
+    こうかとんRect，爆弾Rectが画面外 or 画面内かを判定する関数
+    引数：こうかとんRect or 爆弾Rect
+    戻り値：横方向，縦方向の判定結果タプル（True：画面内／False：画面外）
+    """
+    yoko, tate = True, True
+    if rect.left < 0 or WIDTH < rect.right:
+        yoko = False
+    if rect.top < 0 or HEIGHT < rect.bottom:
+        tate = False
+    return yoko, tate
 
 def main():
     pg.display.set_caption("逃げろ！こうかとん")
@@ -20,7 +32,7 @@ def main():
     kk_img = pg.transform.rotozoom(kk_img, 0, 2.0)
 
     kk_rct = kk_img.get_rect()
-    kk_rct.center = 900,400
+    kk_rct.center = WIDTH/2,HEIGHT/2
 
     bd_img = pg.Surface((20,20))  #練習1
     bd_img.set_colorkey((0,0,0))
@@ -30,7 +42,8 @@ def main():
     bd_rct = bd_img.get_rect()  #爆弾Surfaceから爆弾rectを抽出する
     bd_rct.center = x, y  #爆弾rectの中心座標を乱数で指定する
 
-    vx, vy = +5, +10  #練習2
+    vx, vy = +5, +5  #練習2
+    
 
     clock = pg.time.Clock()
     tmr = 0
@@ -46,11 +59,18 @@ def main():
                 sum_mv[0] += mv[0]
                 sum_mv[1] += mv[1]
         kk_rct.move_ip(sum_mv)
+        if check_bound(kk_rct) != (True, True):
+            kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
 
         bd_rct.move_ip(vx, vy)
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, kk_rct)
         bd_rct.move_ip(vx, vy)
+        yoko, tate = check_bound(bd_rct)
+        if not yoko:
+            vx *= -1
+        if not tate:
+            vy *= -1
         screen.blit(bd_img, bd_rct)
         pg.display.update()
         tmr += 1
