@@ -84,6 +84,9 @@ def main():
         if check_bound(kk_rct) != (True, True):
             kk_rct.move_ip(-sum_mv[0], -sum_mv[1])
 
+        #if tmr <= 10:
+        #    vx += (accs[tmr]*1.01) - 1
+        #    vy += (accs[tmr]*1.01) - 1
         bd_rct.move_ip(vx, vy)
         screen.blit(bg_img, [0, 0])
         screen.blit(kk_img, kk_rct)
